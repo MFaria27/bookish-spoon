@@ -1,0 +1,25 @@
+
+.date-cell {
+    padding-top: 0rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+}
+.dot-cell {
+    padding-top: 0.4rem;
+    padding-bottom: 0rem;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+}
+
+.dot {
+  display:block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.is-invisible {
+  visibility: hidden;
+}
