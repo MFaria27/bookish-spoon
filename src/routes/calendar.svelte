@@ -15,7 +15,7 @@
 	});
 
     $effect(() => {
-        const newGroup = $currentGroup;
+        const newGroup = $currentGroup["name"];
         console.log(`New group loaded: ${newGroup}`)
         loadCalendar();
     });
@@ -35,7 +35,7 @@
 
     async function loadCalendar() {
         try {
-            currentGroup.subscribe(value => { groupName = value; })
+            currentGroup.subscribe(value => { groupName = value?.name; })
 			const res = await fetch(`/api/getCalendarByGroupName?group=${encodeURIComponent(groupName)}`);
 			if (!res.ok) throw new Error('Failed to fetch calendar');
 			const data = await res.json();
