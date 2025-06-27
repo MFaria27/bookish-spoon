@@ -164,7 +164,7 @@
                             <!-- svelte-ignore a11y_missing_attribute -->
                             <!-- svelte-ignore a11y_click_events_have_key_events -->
                             <!-- svelte-ignore a11y_no_static_element_interactions -->
-                            <a class="dropdown-item is-flex is-justify-content-center is-align-items-center px-0 py-2" onclick={openInviteModal}>
+                            <a class="dropdown-item is-flex is-justify-content-center is-align-items-center px-0 py-2 {selectedGroup["name"] == 'Global' ? 'disabled-link' : ''}" onclick={openInviteModal}>
                                 <span class="icon pr-2">
                                     <i class="fas fa-user-plus"></i>
                                 </span>
@@ -173,7 +173,7 @@
                             <!-- svelte-ignore a11y_missing_attribute -->
                             <!-- svelte-ignore a11y_click_events_have_key_events -->
                             <!-- svelte-ignore a11y_no_static_element_interactions -->
-                            <a class="dropdown-item is-flex is-justify-content-center is-align-items-center px-0 py-2" onclick={openRenameModal}>
+                            <a class="dropdown-item is-flex is-justify-content-center is-align-items-center px-0 py-2 {selectedGroup["name"] == 'Global' ? 'disabled-link' : ''}" onclick={openRenameModal}>
                                 <span class="icon pr-2">
                                     <i class="fas fa-rug"></i>
                                 </span>

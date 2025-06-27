@@ -43,6 +43,16 @@
   padding-right: 0.7rem;
 }
 
+.calendar-wrapper .calendar-cell {
+  border: 2px solid transparent;
+  border-radius: 35%;
+  transition: border 0.2s ease;
+}
+
+.calendar-wrapper .calendar-cell:hover {
+  border-color: white;
+}
+
 .calendar-wrapper .dot-cell {
   width: 100%;
   display: flex;
@@ -68,6 +78,12 @@
 
 .clickable-figure:hover {
   opacity: 0.9;
+}
+
+.disabled-link {
+  color: gray !important;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Prevent scaling or wrapping on small screens */

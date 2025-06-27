@@ -25,7 +25,6 @@
 		});
 		if (!res.ok) { console.error('Failed to sync user:', await res.json()); }
 		const data = await res.json();
-		console.log(data)
 	}
 
 </script>
