@@ -1,3 +1,4 @@
+export const prerender = true;
 import { supabase } from '$lib/supabaseClient';
 
 export async function syncUser(user: { name: any; email: any; image: any; }) {

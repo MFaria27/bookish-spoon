@@ -3,6 +3,7 @@
 	import { signIn, signOut } from "@auth/sveltekit/client";
     import { page } from "$app/stores";
 	import { syncUser } from "$lib";
+	import '../../static/global.css'
 
 	const fallbackImage = '/images/fallbackImage.jpg';
 

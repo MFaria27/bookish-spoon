@@ -1,4 +1,5 @@
 // place files you want to import through the `$lib` alias in this folder.
+export const prerender = true;
 export * from "./addUserToGroup";
 export * from "./createGroup";
 export * from "./deleteEvent";

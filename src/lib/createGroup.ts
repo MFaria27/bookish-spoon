@@ -1,3 +1,4 @@
+export const prerender = true;
 import { supabase } from '$lib/supabaseClient';
 
 export async function createGroup(name : string, email : string) {

@@ -1,3 +1,4 @@
+export const prerender = true;
 import { supabase } from '$lib/supabaseClient';
 
 export async function postEvent(calendar_id : string, event_name : string, event_details : string, event_date : string) {
