@@ -2,10 +2,10 @@
     import { Calendar } from "bits-ui";
     import CaretLeft from "phosphor-svelte/lib/CaretLeft";
     import CaretRight from "phosphor-svelte/lib/CaretRight";
-    import Trash from "phosphor-svelte/lib/Trash";
     import { getLocalTimeZone, today, isSameDay, type DateValue, parseDate, CalendarDate } from "@internationalized/date";
     import { onMount } from "svelte";
     import { currentGroup } from "../store";
+    import { deleteEvent, editEvent, getCalendarByGroupName, postEvent } from "$lib";
 
     let groupName : any;
     let calendarID = ''
@@ -85,11 +85,9 @@
     async function loadCalendar() {
         try {
             currentGroup.subscribe(value => { groupName = value?.name; })
-			const res = await fetch(`/api/getCalendarByGroupName?group=${encodeURIComponent(groupName)}`);
-			if (!res.ok) throw new Error('Failed to fetch calendar');
-			const data = await res.json();
-			if (data.error) throw new Error(data.error);
-			let calendar = data.calendar;
+            const res = await getCalendarByGroupName(groupName)
+			if (!res.success || res.error) throw new Error(res.error || 'Failed to fetch calendar');
+			let calendar = res.calendar;
             calendarID = calendar['id']
             saved_dates = []
             calendar['calendar_events'].forEach((saved_date:any) => {
@@ -106,18 +104,8 @@
 
     async function addSavedDate() {
         try {
-            const res = await fetch('/api/postEvent', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    calendar_id: calendarID, 
-                    event_name: placeholderEventTitle,
-                    event_details: placeholderEventDetails,
-                    event_date: placeholderEventDate
-                })
-            });
-            const data = await res.json();
-            if (!res.ok) { throw new Error(data.error || 'Failed to post event'); }
+            const res = await postEvent(calendarID, placeholderEventTitle, placeholderEventDetails, placeholderEventDate)
+            if (!res.success || res.error) { throw new Error(res.error || 'Failed to post event'); }
             await loadCalendar();
         } catch (err: any) { console.error('Error saving event:', err.message); }
 
@@ -127,38 +115,20 @@
         closeModal()
     }
 
-    async function deleteEvent( eventID : any ) {
+    async function deleteEventById( eventID : any ) {
         try {
-            const res = await fetch('/api/deleteEvent', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: eventID })
-            });
-            const data = await res.json();
-            if (!res.ok) { throw new Error(data.error || 'Failed to delete event'); }
+            const res = await deleteEvent(eventID)
+            if (!res.success) { throw new Error(res.error || 'Failed to delete event'); }
             await loadCalendar();
         } catch (err: any) { console.error('Error deleting event:', err.message); }
     }
 
-    async function editEvent() {
+    async function editEventById() {
         try {
             if (editEventDate && typeof editEventDate === 'string'){ editEventDate = parseDate(editEventDate) }
-            const res = await fetch('/api/editEvent', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    "id": editEventId, 
-                    "event_name" : editEventTitle, 
-                    "event_details" : editEventDetails, 
-                    "event_date" : dateValueToISO(editEventDate)
-                }),
-            });
-            if (!res.ok) throw new Error('Failed to edit event');
-            const data = await res.json();
-            if (data.error) throw new Error(data.error);
-        } catch (err: any) {
-            console.error(err.message || 'Unknown error');
-        }
+            const res = await editEvent( editEventId, editEventTitle, editEventDetails, dateValueToISO(editEventDate) )
+            if (!res.success) throw new Error(res.error || 'Failed to edit event');
+        } catch (err: any) { console.error(err.message || 'Unknown error'); }
         await loadCalendar();
         closeEditModal()
     }
@@ -271,7 +241,7 @@
                                                                 <!-- svelte-ignore a11y_missing_attribute -->
                                                                 <!-- svelte-ignore a11y_click_events_have_key_events -->
                                                                 <!-- svelte-ignore a11y_no_static_element_interactions -->
-                                                                <a class="dropdown-item is-flex is-justify-content-center is-align-items-center px-0 py-1" onclick={() => deleteEvent(date["id"])}>
+                                                                <a class="dropdown-item is-flex is-justify-content-center is-align-items-center px-0 py-1" onclick={() => deleteEventById(date["id"])}>
                                                                     <span class="icon pr-2">
                                                                         <i class="fas fa-trash" style="color: hsl(348, 100%, 61%);"></i>
                                                                     </span>
@@ -372,7 +342,7 @@
                                                     <!-- svelte-ignore a11y_missing_attribute -->
                                                     <!-- svelte-ignore a11y_click_events_have_key_events -->
                                                     <!-- svelte-ignore a11y_no_static_element_interactions -->
-                                                    <a class="dropdown-item is-flex is-justify-content-center is-align-items-center px-0 py-1" onclick={() => deleteEvent(saved_date["id"])}>
+                                                    <a class="dropdown-item is-flex is-justify-content-center is-align-items-center px-0 py-1" onclick={() => deleteEventById(saved_date["id"])}>
                                                         <span class="icon pr-2">
                                                             <i class="fas fa-trash" style="color: hsl(348, 100%, 61%);"></i>
                                                         </span>
@@ -420,7 +390,7 @@
                                 </section>
                                 <footer class="modal-card-foot p-4">
                                     <div class="buttons">
-                                        <button class="button is-success" onclick={editEvent}>Edit Event</button>
+                                        <button class="button is-success" onclick={editEventById}>Edit Event</button>
                                         <button class="button" onclick={closeEditModal}>Cancel</button>
                                     </div>
                                 </footer>

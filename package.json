@@ -25,6 +25,7 @@
 		"@auth/core": "^0.39.1",
 		"@auth/sveltekit": "^1.9.2",
 		"@supabase/supabase-js": "^2.50.0",
+		"@sveltejs/adapter-static": "^3.0.8",
 		"bits-ui": "^2.8.0",
 		"dotenv": "^16.5.0",
 		"phosphor-svelte": "^3.0.1"

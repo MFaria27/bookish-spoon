@@ -2,6 +2,7 @@
 	let { children } = $props();
 	import { signIn, signOut } from "@auth/sveltekit/client";
     import { page } from "$app/stores";
+	import { syncUser } from "$lib";
 
 	const fallbackImage = '/images/fallbackImage.jpg';
 
@@ -18,13 +19,10 @@
 	});
 
 	async function uploadUser(user : any){
-		const res = await fetch('/api/syncUser', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(user)
-		});
-		if (!res.ok) { console.error('Failed to sync user:', await res.json()); }
-		const data = await res.json();
+		try {
+            const res = await syncUser(user);
+			if (!res.success || res.error) throw new Error(res.error || 'Failed to sync user');
+        } catch (err: any) { console.error(err.message || 'Unknown error'); }
 	}
 
 </script>

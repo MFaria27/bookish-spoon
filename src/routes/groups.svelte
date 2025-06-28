@@ -1,7 +1,8 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import { onMount, createEventDispatcher } from "svelte";
+    import { onMount } from "svelte";
     import { currentGroup } from "../store";
+    import { addUserToGroup, createGroup, getGroupsByUser, renameGroup } from "$lib";
 
     const { mounted } = $props();
     let groupsMounted = $state(false);
@@ -32,11 +33,9 @@
 
     async function loadGroups() {
         try {
-			const res = await fetch(`/api/getGroupsByUser?email=${encodeURIComponent(email)}`);
-			if (!res.ok) throw new Error('Failed to fetch groups');
-			const data = await res.json();
-			if (data.error) throw new Error(data.error);
-            data["groups"].forEach((groupData : any) => {
+            const res = await getGroupsByUser(email);
+			if (!res.success || res.error) throw new Error(res.error || 'Failed to fetch groups');
+            res["groups"].forEach((groupData : any) => {
                 groups.push({ 
                     name : groupData["groups"]["name"],
                     id : groupData["group_id"]
@@ -51,15 +50,8 @@
 
     async function inviteUser() {
         try {
-            const res = await fetch('/api/addUserToGroup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    email: placeholderEmail, 
-                    group_id: selectedGroup.id }),
-            });
-            const data = await res.json();
-            if (!res.ok || data.error) throw new Error(data.error || 'Failed to add user');
+            const res = await addUserToGroup(placeholderEmail, selectedGroup.id)
+            if (!res.success || res.error) throw new Error(res.error || 'Failed to add user');
             console.log('User added to group successfully');
             isInviteModalOpen = false;
             settingsDropdownActive = false;
@@ -69,23 +61,14 @@
         }
     }
 
-    async function renameGroup() {
+    async function renameGroupById() {
         try {
-            const res = await fetch('/api/renameGroup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    "id": selectedGroup.id, 
-                    "name": placeholderRename
-                }),
-            });
-            if (!res.ok) throw new Error('Failed to rename group');
-            const data = await res.json();
-            if (data.error) throw new Error(data.error);
-            console.log('Group renamed:', data['group']);
-            selectedGroup = data['group']
-            const obj = groups.find(item => item.id === data['group']['id'])
-            if(obj) obj.name = data['group']['name']
+            const res = await renameGroup(selectedGroup.id, placeholderRename)
+            if (!res.success || res.error) throw new Error(res.error || 'Failed to rename group');
+            console.log('Group renamed:', res['group']);
+            selectedGroup = res['group']
+            const obj = groups.find(item => item.id === res['group']['id'])
+            if(obj) obj.name = res['group']['name']
             isRenameModalOpen = false;
             settingsDropdownActive = false;
             placeholderRename = ''
@@ -94,24 +77,15 @@
         }
     }
 
-    async function createGroup() {
+    async function createGroupByEmail() {
         try {
-            const res = await fetch('/api/createGroup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    name: placeholderGroupName, 
-                    email: email 
-                }),
-            });
-            if (!res.ok) throw new Error('Failed to create group');
-            const data = await res.json();
-            if (data.error) throw new Error(data.error);
+            const res = await createGroup(placeholderGroupName, email)
+            if (!res.success || res.error) throw new Error(res.error || 'Create group');
             isCreateModalOpen = false;
             settingsDropdownActive = false;
             placeholderGroupName = ''
-            groups.push(data.group.name)
-            updateGroupName(data.group)
+            groups.push(res.group.name)
+            updateGroupName(res.group)
         } catch (err: any) { console.error(err.message || 'Unknown error'); }
     }
 
@@ -238,7 +212,7 @@
                     </section>
                     <footer class="modal-card-foot p-4">
                         <div class="buttons">
-                            <button class="button is-success" onclick={renameGroup}>Save</button>
+                            <button class="button is-success" onclick={renameGroupById}>Save</button>
                             <button class="button" onclick={closeRenameModal}>Cancel</button>
                         </div>
                     </footer>
@@ -264,7 +238,7 @@
                     </section>
                     <footer class="modal-card-foot p-4">
                         <div class="buttons">
-                            <button class="button is-success" onclick={createGroup}>Save</button>
+                            <button class="button is-success" onclick={createGroupByEmail}>Save</button>
                             <button class="button" onclick={closeCreateModal}>Cancel</button>
                         </div>
                     </footer>
