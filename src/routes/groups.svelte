@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { page } from "$app/stores";
     import { onMount } from "svelte";
     import { currentGroup } from "../store";
     import { addUserToGroup, createGroup, getGroupsByUser, renameGroup } from "$lib";
+    import { session } from "../store";
 
     const { mounted } = $props();
     let groupsMounted = $state(false);
@@ -12,7 +12,7 @@
 
     let groupDropdownActive = $state(false);
     let settingsDropdownActive = $state(false);
-    let email : any = $page.data.session?.user?.email
+    let email : any = $session?.user?.email
     let groups : any[] = $state([])
     let selectedGroup : any = $state();
 

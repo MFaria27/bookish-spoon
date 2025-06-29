@@ -1,4 +1,3 @@
-export const prerender = true;
 import { supabase } from '$lib/supabaseClient';
 
 export async function getCalendarByGroupName(groupName : string) {

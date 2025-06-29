@@ -1,9 +1,8 @@
 <script lang="ts">
     import { browser } from '$app/environment';
-    import { page } from "$app/stores";
-    // console.log($page.data.session);
     import Calendar from "./calendar.svelte";
     import Groups from './groups.svelte';
+    import { session } from '../store';
 
     let groupsLoaded = false;
     function onGroupsMounted(){ groupsLoaded = true }
@@ -15,7 +14,7 @@
 
 <main>
     <div class="container is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-        {#if browser && $page.data.session}
+        {#if browser && $session}
             <Groups mounted={onGroupsMounted}/>
             {#if groupsLoaded} <Calendar /> {/if}
         {:else}

@@ -1,16 +1,15 @@
-export const prerender = true;
 import { supabase } from '$lib/supabaseClient';
 
-export async function syncUser(user: { name: any; email: any; image: any; }) {
+export async function syncUser(user: any) {
   if (!user) { return { error: 'Missing required user data' }; }
 
   const { data, error } = await supabase
     .from('users')
     .upsert(
         {
-            name: user.name,
+            name: user.user_metadata.full_name,
             email: user.email,
-            image: user.image
+            image: user.user_metadata.avatar_url
         },
         { onConflict: 'email' }
     );
