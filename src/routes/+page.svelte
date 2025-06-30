@@ -9,9 +9,6 @@
 
 </script>
 
-<style>
-</style>
-
 <main>
     <div class="container is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
         {#if browser && $session}

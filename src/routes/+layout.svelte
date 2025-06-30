@@ -1,13 +1,12 @@
-<!-- <svelte:head>
+<svelte:head>
   <link rel="stylesheet" href="/global.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
-</svelte:head> -->
+</svelte:head>
 
 <script lang="ts">
 	let { children } = $props();
 	import { supabase } from "$lib/supabaseClient";
 	import { syncUser } from "$lib";
-	import '../../static/global.css';
+	// import '../../static/global.css';
 	import 'bulma/css/bulma.css';
 	import { session } from "../store";
     import { onMount } from "svelte";
