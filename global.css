@@ -1,0 +1,93 @@
+.dot {
+  display:block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.is-invisible {
+  visibility: hidden;
+}
+
+.calendar-wrapper {
+  width: 350px;
+  max-width: 350px;
+  min-width: 350px;
+}
+
+/* Prevent Bulma from stacking */
+.calendar-wrapper .columns {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  flex-direction: row !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.calendar-wrapper .column {
+  flex: 1 0 0% !important;
+  padding: 0.25rem !important;
+  min-width: 0 !important;
+}
+
+/* Keep cell content centered & aligned */
+.calendar-wrapper .date-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.7rem;
+  padding-right: 0.7rem;
+}
+
+.calendar-wrapper .calendar-cell {
+  border: 2px solid transparent;
+  border-radius: 35%;
+  transition: border 0.2s ease;
+}
+
+.calendar-wrapper .calendar-cell:hover {
+  border-color: white;
+}
+
+.calendar-wrapper .dot-cell {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.4rem;
+  padding-bottom: 0rem;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+}
+
+.clickable-figure {
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: border 0.2s ease;
+}
+
+.clickable-figure:focus {
+  outline: none;
+  border: 2px solid #3273dc; /* Bulma primary */
+}
+
+.clickable-figure:hover {
+  opacity: 0.9;
+}
+
+.disabled-link {
+  color: gray !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Prevent scaling or wrapping on small screens */
+@media (max-width: 768px) {
+  .calendar-wrapper {
+    overflow-x: auto;
+  }
+}
