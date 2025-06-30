@@ -16,7 +16,6 @@
   min-width: 350px;
 }
 
-/* Prevent Bulma from stacking */
 .calendar-wrapper .columns {
   display: flex !important;
   flex-wrap: nowrap !important;
@@ -31,7 +30,6 @@
   min-width: 0 !important;
 }
 
-/* Keep cell content centered & aligned */
 .calendar-wrapper .date-cell {
   display: flex;
   align-items: center;
@@ -72,7 +70,7 @@
 
 .clickable-figure:focus {
   outline: none;
-  border: 2px solid #3273dc; /* Bulma primary */
+  border: 2px solid hsl(171, 100%, 41%);
 }
 
 .clickable-figure:hover {
@@ -85,7 +83,6 @@
   pointer-events: none;
 }
 
-/* Prevent scaling or wrapping on small screens */
 @media (max-width: 768px) {
   .calendar-wrapper {
     overflow-x: auto;
